@@ -40,10 +40,10 @@ a = 'foo' # a.<Tab> will find them in IPython. in ST3, ctrl+space
 ## "Duck" typing --------------------------------------------------
 def isiterable(obj): # checks if something is "iterable"
 	try:
-		iter(obj)
-		return True
-	except TypeError:
-		return False
+        iter(obj)
+        return True
+    except TypeError:
+        return False
 
 
 isiterable('a string') # True
@@ -926,3 +926,53 @@ def make_watcher():
 watcher = make_watcher()
 vals = [5, 6, 1, 5, 1, 6, 3, 5]
 [watcher(x) for x in vals]
+
+
+## since you cannot bind values in functions, one can instead
+## use functions to update lists or dicts
+def make_counter():
+    count = [0]
+    def counter():
+        count[0] += 1
+        return count[0]
+    return counter # `counter` references list `count`
+
+counter = make_counter() # here, we modify the object `counter`
+counter() # 1
+counter() # 2
+counter() # 3
+
+# another example, formatting to string
+def format_and_pad(template, space):
+    def formatter(x):
+        return (template % x).rjust(space)
+    return formatter
+
+fmt = format_and_pad('%.4f', 15) # initialize function
+fmt(1.756)
+
+
+
+# Extended Call Syntax with *args, **kwargs -----------------------
+"""
+When you write func(a, b, c, d=some, e=value), the positional and keyword
+arguments are actually packed up into a tuple and dict, respectively. So the internal
+function receives a tuple args and dict kwargs and internally does the equivalent of:
+
+    a, b, c = args
+    d = kwargs.get('d', d_default_value)
+    e = kwargs.get('e', e_default_value)
+"""
+
+## to see whats happening...
+def say_hello_then_call_f(f, *args, **kwargs):
+    print 'args is', args
+    print 'kwargs is', kwargs
+    print("Hello! Now I'm going to call %s" % f)
+    return f(*args, **kwargs)
+
+def g(x, y, z=1):
+    return (x + y) / z
+
+say_hello_then_call_f(g, 1, 2, z = 5.)
+

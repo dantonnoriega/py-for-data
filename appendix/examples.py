@@ -1,4 +1,4 @@
-### appendix: python intro
+"""appendix: python intro"""
 
 ## referencing ---------------------------------------------------
 a = [1, 2, 3]
@@ -19,7 +19,10 @@ a
 
 ## strong types --------------------------------------------------
 try:
-	'5' + 5 # fails and python does NOT convert (generally). hence, strong types.
+    5 + '5' # fails and python does NOT convert (generally). hence, strong types.
+except:
+    pass
+
 a = 4.5 ; b = 2
 type(a) ; type(b)
 a / b
@@ -50,7 +53,8 @@ isiterable([1, 2]) # True
 x = "hey hi yo"
 
 if not isinstance(x, list) and isiterable(x): # checks if not list and iterable
-	x = list(x) ; print(x) # now its a list!
+    x = list(x)
+    print(x) # now its a list!
 
 
 ## imports ---------------------------------------------------------
@@ -60,8 +64,8 @@ cd /Users/dnoriega/GitHub/pyfordata/appendix
 import some_module
 result = some_module.f(5)
 pi = some_module.PI
-??some_module.g # we can look at the functions
-??some_module.f # etc.
+# ??some_module.g # we can look at the functions
+# ??some_module.f # etc.
 
 # equivalently
 from some_module import f, g, PI
@@ -115,7 +119,7 @@ a is not b 		# True if a and b reference different Python objects
 
 
 ## strictness vs laziness --------------------------------------------
-
+# python uses strict evaluation
 # strict evaluatation is immediate.
 # lazy evaluation means value assigned if obj used
 a = b = c = 5 # statements are immediately (or strictly) evaluated
@@ -130,7 +134,7 @@ a_list
 
 a_tuple = (3, 5, (4, 5))
 type(a_tuple) # tuples are immutable (cannot change value)
-a_tuple[1] = 'four'
+a_tuple[1] = 'four' # error
 
 
 ## scalar types -------------------------------------------------------
@@ -164,7 +168,7 @@ This is a longer string that
 spans multiple lines
 """
 
-# strings are immutable?
+# strings are immutable
 a = 'this is a string'
 a[10]
 a[10] = 'f' # cant change immutable objects
@@ -249,7 +253,7 @@ dt.replace(minute = 0, second = 0)
 dt2 = datetime(2011, 11, 15, 22, 30)
 delta = dt2 - dt
 delta
-dt + delta
+dt + delta # = dt2
 
 
 # control flow -----------------------------------------------------
@@ -292,10 +296,11 @@ total # started at 0 now 12
 
 sequence = [1, 2, 0, 4, 6, 5, 2, 1]
 total_until_5 = 0
+
 for value in sequence:
-if value == 5:
-break
-total_until_5 += value
+	total_until_5 += value
+	if value == 5:
+		break
 
 
 # while loops --------------------------------------------------------
@@ -532,6 +537,7 @@ seq2 = ['one', 'two', 'three']
 zip(seq1, seq2) # creates like (x,y) pairs etc.
 seq3 = [False, True]
 zip(seq1, seq2, seq3)
+
 for i, (a, b) in enumerate(zip(seq1, seq2)):
 	print('%d: %s, %s' % (i, a, b))
 
@@ -571,7 +577,7 @@ key_list = ('a', 'b', 'c')
 value_list = ([1, 2, 3, 4], [5, 6, 7], ['a', 'b', 'c'])
 
 for key, value in zip(key_list, value_list):
-	mapping[key] = value
+    mapping[key] = value
 
 mapping
 
@@ -582,15 +588,17 @@ mapping1
 
 ## default values
 # standard to do if-else to look for a key in a list. if not here, return default
-some_dict = zip(key_list, value_list)
+some_dict = dict(zip(key_list, value_list))
 default_value = 5
+
 if key in some_dict:
 	value = some_dict[key]
 else:
 	value = default_value
 
 # this can be done in one line!
-value = some_dict.get(key, default_value) 	# if `get` doesn't pull a key, returns
+some_dict = dict(zip(key_list, value_list))
+value = some_dict.get('a', default_value) 	# if `get` doesn't pull a key, returns
 											#	None. `pop` fails, returns none.
 
 # other lists can also be defaults
@@ -599,18 +607,322 @@ words = ['apple', 'bat', 'bar', 'atom', 'book']
 by_letter = {}
 
 for word in words:
-	letter = word[0] # get the first letter
-	if letter not in by_letter: # see if first letter exists as key
-		by_letter[letter] = [word] # if it doesn't, make it a key and assign value
-	else:
-		by_letter[letter].append(word) # else, append word to key by letter
+    letter = word[0]
+    if letter not in by_letter:
+        by_letter[letter] = [word]
+    else:
+        by_letter[letter].append(word)
 
-by_letter
+
+words = ['apple', 'bat', 'bar', 'atom', 'book']
+by_letter = {}
 
 # you can compress the if-else into a single line
 for word in words:
 	letter = word[0] # get the first letter
-	by_letter.setdefault(letter).append(word) # compressed
+	by_letter.setdefault(letter, []).append(word) # compressed
 
 by_letter
 
+
+# even easier using collections
+from collections import defaultdict
+by_letter = defaultdict(list)
+for word in words:
+    by_letter[word[0]].append(word)
+
+counts = defaultdict(lambda: 4)
+
+
+# valid dict key types
+# keys must be immutable scalar types: int, float, string or tuples
+# the technical term is "hashable"
+hash('string')
+hash((1, 2, (2, 3)))
+hash((1, 2, [2, 3])) # fails cause [2, 3] is a list. list are mutable.
+
+# can use a list if we convert it to a tuple
+d = {}
+d[tuple([1, 2, 3])] = 5
+d
+
+
+# SET ----------------------------------------------------------
+# sets are like dicts but keys only, no values
+set([2, 2, 2, 1, 3, 3])
+set([1, 2, 3])
+
+{2, 2, 2, 1, 3, 3}
+set([1, 2, 3])
+
+# set operations
+a = {1, 2, 3, 4, 5}
+b = {3, 4, 5, 6, 7, 8}
+a | b # union (or)
+set(range(1,8))
+a & b # instersection (and)
+a - b # difference
+set([1, 2, 6, 7, 8])
+a_set = {1, 2, 3, 4, 5}
+{1, 2, 3}.issubset(a_set) # can check if something is a subset
+a_set.issuperset({1, 2, 3}) # and also a superset
+{1, 2, 3} == {3, 2, 1}
+
+# python set operations
+a = set(range(7))
+b = set(range(5, 11))
+x = 8
+a.add(x) # add element x to the set a
+a.remove(x) # remove element x from set a
+a.union(b) # a | b
+a.intersection(b) # a & b
+a.difference(b) # a - b
+a.symmetric_difference(b) # a ^ b (a or b but not both)
+a.issubset(b)
+a.issuperset(b)
+a.isdisjoint(b)
+
+
+
+# LIST, SET, AND DICT COMPREHENSION -------------------------------
+"""
+list comprehension are one of the most-loved python language feature.
+ allows you to concisely form a new list by filtering the elements of
+ a collection and transforming the elements passing the filter in one
+ conscise experession. they take the basic form:
+
+    [expr for val in collection if condition]
+
+This is equivalent to the following for loop:
+
+    result = []
+    for val in collection:
+        if condition:
+            result.append(expr)
+"""
+# filter out strings len() > 2 and converts to uppercase
+strings = ['a', 'as', 'bat', 'car', 'dove', 'python']
+[x.upper() for x in strings if len(x) > 2]
+
+"""
+A dict comprehension looks like this:
+
+    dict_comp = {key-expr : value-expr for value in collection
+                    if condition}
+
+A set comprehension looks like the equivalent list comprehension except with curly
+braces instead of square brackets:
+
+    set_comp = {expr for value in collection if condition}
+"""
+# set comp example
+unique_lengths = {len(x) for x in strings}
+unique_lengths
+
+# dict comp example
+loc_mapping = {val : index for index, val in enumerate(strings)}
+loc_mapping # set with keys aka set-value
+
+# equivalent to...
+loc_mapping = dict((val, idx) for idx, val in enumerate(strings))
+loc_mapping
+
+# NESTED LIST COMPREHENSIONS -----------------------------------------------
+# take a list of lists
+all_data = [['Tom', 'Billy', 'Jefferson', 'Andrew', 'Wesley', 'Steven', 'Joe'],
+    ['Susie', 'Casey', 'Jill', 'Ana', 'Eva', 'Jennifer', 'Stephanie']]
+
+# suppose we wanted a single list containing all names with two or more e's in them
+
+# this for loop can be condensed...
+names_of_interest = []
+for names in all_data:
+    enough_es = [name for name in names if name.count('e') > 2]
+    names_of_interest.extend(enough_es)
+
+#...into one line!
+result = [name for names in all_data
+                for name in names if name.count('e') >= 2]
+
+# another example, in one line
+some_tuples = [(1, 2, 3), (4, 5, 6), (7, 8, 9)]
+flattened = [x for tup in some_tuples for x in tup]
+flattened
+
+# here as a nested loop
+flattened = []
+for tup in some_tuples:
+    for x in tup:
+        flattened.append(x)
+
+# can make a list within lists
+[[x for x in tup] for tup in some_tuples]
+
+
+# FUNCTIONS ----------------------------------------------------------
+def my_function(x, y, z = 1.5):
+    if z > 1:
+        return z * (x + y)
+    else:
+        return z / (x + y)
+
+# "positional" arguments vs "keyword" arguments
+"""keyword = commonly used to specify default values or optional args.
+`my_function` can be called in the following two ways"""
+
+my_function(5, 6, z = 0.7)
+my_function(3.14, 7, 3.5)
+
+"""main restriction: keyword arguments MUST follow the positional
+ arguments (if any). keyword arguments can be in any order."""
+
+
+## NAMESPACES, SCOPE, AND LOCAL FUNCTIONS ---------------------------
+# global vs local scopes
+# within functions = local (think R)
+
+# compare...
+def func():
+    a = []
+    for i in range(5):
+        a.append(i)
+
+func()
+a # list is empty since a is not passed outside the func
+
+# ... to
+a = []
+def func():
+    for i in range(5):
+        a.append(i)
+
+func()
+a # not empty -- `a` reference was updated
+
+## assigning global values within functions is possible using `global`
+a = None
+
+def bind_a_variable():
+    global a
+    a = []
+
+bind_a_variable()
+print a # its `[]` not `None`
+
+"""Functions can be declared anywhere, and there is no problem with having local functions
+that are dynamically created when a function is called:
+
+    def outer_function(x, y, z):
+        def inner_function(a, b, c):
+            pass
+        pass
+
+In the above code, the inner_function will not exist until outer_function is called. As
+soon as outer_function is done executing, the inner_function is destroyed."""
+
+
+# RETURNING MULTIPLE VALUES ------------------------------------------
+## awesome feature! return multiple values
+def f():
+    a = 5
+    b = 6
+    c = 7
+    return a, b, c
+
+a, b, c = f()
+a, b, c
+
+
+# FUNCTIONS ARE OBJECTS ----------------------------------------------
+states = [' Alabama ', 'Georgia!', 'Georgia', 'georgia', 'FlOrIda',
+'south carolina##', 'West virginia?']
+
+## Using functions for cleaning data
+import re # regular expression module
+
+def clean_strings(strings):
+    result = []
+    for value in strings:
+        value = value.strip() # remove whitespace
+        value = re.sub('[!#?]', '', value) # remove punctuation
+        value = value.title() # cap first word (Title)
+        result.append(value)
+    return result
+
+clean_strings(states)
+
+
+## remove certain values
+states = [' Alabama ', 'Georgia!', 'Georgia', 'georgia', 'FlOrIda',
+'south carolina##', 'West virginia?']
+
+def remove_punctuation(value):
+    return re.sub('[!%?]', '', value)
+
+clean_ops = [str.strip, remove_punctuation, str.title] # create fun list
+
+def clean_strings(strings, ops):
+    result = []
+    for value in strings:
+        for function in ops:
+            value = function(value) # here we take functions and apply them
+        result.append(value)
+    return result
+
+clean_strings(states, clean_ops) # much more concise
+
+## `map(function, sequence)` applies functions to values
+states = [' Alabama ', 'Georgia!', 'Georgia', 'georgia', 'FlOrIda',
+'south carolina##', 'West virginia?']
+
+
+# ANONYMOUS (lambda) FUNCTIONS -----------------------------------
+## following are the same
+def short_function(x):
+    return x * 2
+
+equiv_anon = lambda x: x * 2
+
+## creating neat, reusable functions
+def apply_to_list(some_list, f):
+    return [f(x) for x in some_list]
+
+ints = [4, 0, 1, 5, 6]
+apply_to_list(ints, lambda x: x * 2)
+
+# more succinct but the same as
+[x * 2 for x in ints]
+
+## another example
+# sort strings by the number of distinct letters
+strings = ['foo', 'card', 'bar', 'aaaa', 'abab']
+strings.sort(key = lambda x: len(set(list(x))))
+strings
+
+
+#  CLOSURES: FUNCTIONS THAT RETURN FUNCTIONS -----------------------
+def make_closure(a):
+    def closure():
+        print 'I know the secret: %d' % a
+    return closure
+
+closure = make_closure(5)
+closure()
+
+# here is a function that returns a function that keeps
+#   track of the arugments it has been called with:
+
+def make_watcher():
+    have_seen = {}
+
+    def has_been_seen(x):
+        if x in have_seen:
+            return True
+        else:
+            have_seen[x] = True
+            return False
+    return has_been_seen
+
+watcher = make_watcher()
+vals = [5, 6, 1, 5, 1, 6, 3, 5]
+[watcher(x) for x in vals]

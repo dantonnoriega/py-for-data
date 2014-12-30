@@ -346,7 +346,7 @@ all_data = [['Tom', 'Billy', 'Jefferson', 'Andrew', 'Wesley', 'Steven', 'Joe'],
 # this for loop can be condensed...
 names_of_interest = []
 for names in all_data:
-    enough_es = [name for name in names if name.count('e') > 2]
+    enough_es = [name for name in names if name.count('e') >= 2]
     names_of_interest.extend(enough_es)
 
 #...into one line!

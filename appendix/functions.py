@@ -155,7 +155,6 @@ closure()
 
 def make_watcher():
     have_seen = {}
-
     def has_been_seen(x):
         if x in have_seen:
             return True
@@ -237,5 +236,103 @@ add_five = lambda y: add_numbers(5, y)
 """
 The second argument to add_numbers is said to be curried.
 """
+
+
+# Generators ---------------------------------------------------------
+# iterating over dict gives keys
+some_dict = {'a': 1, 'b': 2, 'c': 3}
+for key in some_dict:
+    print key,
+
+dict_iterator = iter(some_dict) # creates iterator for loops
+
+# generators create new iterable objects, returning lists/seq,
+#   not single vals.
+# create generators using `yield` instead of `return`
+def squares(n=10):
+    print 'Generating squares from 1 to %d' % (n ** 2)
+    for i in xrange(1, n + 1):
+        yield i ** 2
+
+# when calling gens, they are not executed immediately only
+#   once request for iterating
+gen = squares()
+gen
+
+for x in gen:
+    print x,
+
+# example, making change:
+def make_change(amount, coins=[1, 5, 10, 25], hand=None):
+    hand = [] if hand is None else hand
+    if amount == 0:
+        yield hand
+    for coin in coins:
+        # ensures we don't give too much change, and combinations are unique
+        if coin > amount or (len(hand) > 0 and hand[-1] < coin):
+            continue
+        for result in make_change(amount - coin, coins=coins,
+                            hand=hand + [coin]):
+            yield result
+
+for way in make_change(100, coins = [10, 25, 50]):
+    print way
+
+len(list(make_change(100)))
+
+
+# Generator expressions ---------------------------------------------
+# similar to list, dict, and set comprehension
+gen = (x ** 2 for x in xrange(100)) # use () not []
+
+# same as
+def _make_gen():
+    for x in xrange(100):
+        yield x ** 2
+
+gen = _make_gen()
+
+# can be used inside any python function that accepts generators
+sum((x ** 2 for x in xrange(100)))
+dict((i, i ** 2) for i in xrange(5))
+
+
+
+# itertools module --------------------------------------------------
+import itertools
+
+# example, `groupby` takes seqs and funcs and groups by return val
+first_letter = lambda x: x[0]
+names = ['Alan', 'Adam', 'Wes', 'Will', 'Albert', 'Steven']
+for letter, names in itertools.groupby(names, first_letter):
+    print letter, list(names) # `names` is a generator
+
+# list of useful itertools functions
+"""
+# Generator version of the built-in map; applies func to each zipped tuple of
+the passed sequences.
+
+    imap(func, *iterables)
+
+# Generator version of the built-in filter; yields elements x for which
+func(x) is True.
+
+    ifilter(func, iterable)
+
+# Generates a sequence of all possible k-tuples of elements in the iterable,
+ignoring order.
+
+    combinations(iterable, k)
+
+# Generates a sequence of all possible k-tuples of elements in the iterable,
+respecting order.
+
+    permutations(iterable, k)
+
+# Generates (key, sub-iterator) for each unique key
+
+    groupby(iterable[, keyfunc])
+"""
+
 
 

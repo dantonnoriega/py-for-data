@@ -241,7 +241,7 @@ from datetime import datetime, date, time
 
 dt = datetime(2011, 10, 29, 20, 30, 21) # dt is not a datetime obj
 
-# use methods on datetime to extract methods
+# use methods on datetime to extract data
 dt.day
 dt.minute
 dt.date()

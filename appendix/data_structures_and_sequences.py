@@ -114,7 +114,7 @@ seq[3:4] = [6, 3]
 seq[:5] # start indexing can be subbed with `:`
 seq[3:] # same with stops
 seq[-4:] # negative slicing
-seq[2::] # an extra `:` can be used to create skips. here there are 2.
+seq[::2] # an extra `:` can be used to create skips. here there are 2.
 seq[::-1] # this reverses the vector
 
 

@@ -10,7 +10,7 @@ b
 
 ## pass by reference ---------------------------------------------
 def append_element(some_list, element):
-	some_list.append(element)
+    some_list.append(element)
 
 a = [1, 2, 3]
 append_element(a, 4) # python only passes references to functions. no copies made!
@@ -320,16 +320,16 @@ x
 # pass is used a sort of placeholder while working on code in python
 x = 3
 if x < 0:
-	print 'negative!'
+    print 'negative!'
 elif x == 0:
 	# TODO: put something smart here
-	pass # used to nullify blocks. only required since python takes whitespace
+    pass # used to nullify blocks. only required since python takes whitespace
 else:
-	print 'positive!'
+    print 'positive!'
 
 def f(x, y, z):
-	# TODO: implement this function!
-	pass
+    # TODO: implement this function!
+    pass
 
 
 # exception handling ---------------------------------------------------
@@ -337,10 +337,10 @@ float('1.2345')
 float('something')
 
 def attempt_float(x):
-	try:
-		return float(x)
-	except:
-		return x
+    try:
+       return float(x)
+    except:
+       return x
 
 attempt_float('1.2345')
 attempt_float('something')
@@ -348,9 +348,9 @@ float((1,2))
 
 def attempt_float(x):
 	try:
-		return float(x)
+        return float(x)
 	except ValueError:
-		return x
+        return x
 
 attempt_float('1.2345')
 attempt_float('something')
@@ -360,20 +360,20 @@ def attempt_float(x):
 	try:
 		return float(x)
 	except (TypeError, ValueError):
-		return x
+        return x
 
 # range and xrange -------------------------------------------------------
 range(10)
 range(0, 20, 2)
 seq = [1, 2, 3, 4]
 for i in range(len(seq)):
-	val = seq[i]
+    val = seq[i]
 
 sum = 0
 for i in xrange(10000):
-	# % is the modulo operator
-	if x % 3 == 0 or x % 5 == 0:
-		sum += i
+    # % is the modulo operator
+    if x % 3 == 0 or x % 5 == 0:
+        sum += i
 
 
 # ternary expressions ----------------------------------------------------
@@ -386,9 +386,9 @@ value = 8 if x < 3 else 9
 
 # in a block
 if x < 3:
-	value = 8
+    value = 8
 else:
-	value = 9
+    value = 9
 
 x = 5
 'Non-negative' if x >= 0 else 'Negative'
